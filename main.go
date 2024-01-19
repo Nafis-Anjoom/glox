@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+    
 )
 
 func main() {
@@ -17,18 +18,8 @@ func main() {
     // }
     // tools.DefineAst("./", "expr", types)
 
-    expr := Binary{
-        left: &Unary{
-            operator: Token{MINUS, "-", "", 1},
-            right: &Literal{"123"},
-        },
-        operator: Token{STAR, "*", "", 1},
-        right: &Grouping{
-            expression: &Literal{"45.67"},
-        },
-    }
 
-    fmt.Println(expr.Print())
+    // fmt.Println(expr.Print())
 }
 
 func runFile(path string) {
@@ -42,16 +33,16 @@ func runFile(path string) {
 }
 
 func run(source string) {
-    scanner := Scanner { source }
+    // scanner := lox.Scanner { source }
 
-    tokens, err := scanner.Scan()
-    if err != nil {
-        log.Fatal("Error while scanning")
-    }
+    // tokens, err := scanner.Scan()
+    // if err != nil {
+    //     log.Fatal("Error while scanning")
+    // }
 
-    for _, token := range tokens {
-        fmt.Println(token)
-    }
+    // for _, token := range tokens {
+    //     fmt.Println(token)
+    // }
 
 }
 

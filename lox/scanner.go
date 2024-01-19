@@ -1,8 +1,6 @@
-package main
+package lox
 
 import "log"
-
-// import "fmt"
 
 type Scanner struct {
     Text string
