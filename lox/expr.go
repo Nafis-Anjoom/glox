@@ -20,13 +20,13 @@ func parenthesize(name string, exprs ...Expr) string {
     return builder.String()
 }
 
-type Binary struct{
+type Binary struct {
 	left Expr
 	operator Token
 	right Expr
 }
 
-func (b *Binary) Print() string {
+func (b Binary) Print() string {
     return parenthesize(b.operator.lexeme, b.left, b.right)
 }
 
@@ -35,27 +35,27 @@ type Grouping struct{
 	expression Expr
 }
 
-func (g *Grouping) Print() string {
+func (g Grouping) Print() string {
     return parenthesize("group", g.expression)
 }
 
-type Literal struct{
+type Literal struct {
 	value string
 }
 
-func (l *Literal) Print() string {
+func (l Literal) Print() string {
     if l.value == "" {
         return "nil"
     }
     return l.value
 }
 
-type Unary struct{
+type Unary struct {
 	operator Token
 	right Expr
 }
 
-func (u *Unary) Print() string {
+func (u Unary) Print() string {
     return parenthesize(u.operator.lexeme, u.right)
 }
 

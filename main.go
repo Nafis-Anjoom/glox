@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-    
+    "glox/lox"
 )
 
 func main() {
+    hadError := false;
     // args := os.Args
     // runFile(args[1])
     // types := []string{
@@ -20,6 +21,8 @@ func main() {
 
 
     // fmt.Println(expr.Print())
+    fmt.Println("glox interpreter 1.0")
+    fmt.Println(">>>")
 }
 
 func runFile(path string) {
@@ -33,16 +36,18 @@ func runFile(path string) {
 }
 
 func run(source string) {
-    // scanner := lox.Scanner { source }
+    tokens, err := lox.Scan(source)
+    if err != nil {
+        log.Fatal("Error while scanning")
+    }
 
-    // tokens, err := scanner.Scan()
-    // if err != nil {
-    //     log.Fatal("Error while scanning")
-    // }
-
-    // for _, token := range tokens {
-    //     fmt.Println(token)
-    // }
+    for _, token := range tokens {
+        fmt.Println(token)
+    }
 
 }
 
+func error(line int, where string, message string) {
+    fmt.Printf("[line %v] Error %v: %v\n", line, where, message);
+    return fmt.Sprintf("%v %v %v %d", token.tokenType, token.lexeme, token.literal, token.line)
+}

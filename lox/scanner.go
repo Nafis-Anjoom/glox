@@ -2,12 +2,8 @@ package lox
 
 import "log"
 
-type Scanner struct {
-    Text string
-}
-
-func (s *Scanner) Scan() ([]Token, error) {
-    runes := []rune(s.Text)
+func Scan(text string) ([]Token, error) {
+    runes := []rune(text)
 
     start := 0
     current := 0
