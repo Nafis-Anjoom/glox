@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-    
+    "glox/lox"
 )
 
 func main() {
@@ -33,16 +33,16 @@ func runFile(path string) {
 }
 
 func run(source string) {
-    // scanner := lox.Scanner { source }
+    scanner := lox.Scanner { source }
 
-    // tokens, err := scanner.Scan()
-    // if err != nil {
-    //     log.Fatal("Error while scanning")
-    // }
+    tokens, err := scanner.Scan()
+    if err != nil {
+        log.Fatal("Error while scanning")
+    }
 
-    // for _, token := range tokens {
-    //     fmt.Println(token)
-    // }
+    for _, token := range tokens {
+        fmt.Println(token)
+    }
 
 }
 
