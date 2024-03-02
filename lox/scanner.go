@@ -86,7 +86,6 @@ func Scan(text string) ([]Token, error) {
 
         number := string(runes[start: current])
         tokens = append(tokens, Token{ NUMBER, number, number, line })
-
     }
 
     isAlpha := func(c rune) bool {

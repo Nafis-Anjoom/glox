@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-    hadError := false;
+    // hadError := false;
     // args := os.Args
     // runFile(args[1])
     // types := []string{
@@ -49,5 +49,4 @@ func run(source string) {
 
 func error(line int, where string, message string) {
     fmt.Printf("[line %v] Error %v: %v\n", line, where, message);
-    return fmt.Sprintf("%v %v %v %d", token.tokenType, token.lexeme, token.literal, token.line)
 }
