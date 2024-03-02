@@ -41,9 +41,12 @@ func run(source string) {
         log.Fatal("Error while scanning")
     }
 
-    for _, token := range tokens {
-        fmt.Println(token)
-    }
+    // for _, token := range tokens {
+    //     fmt.Println(token)
+    // }
+
+    expression := lox.Parse(tokens)
+    fmt.Println(expression)
 
 }
 

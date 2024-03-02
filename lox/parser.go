@@ -1,11 +1,19 @@
 package lox
 
 import (
-	"errors"
+	"fmt"
 	"log"
 )
 
-func Parse(tokens []Token) (Expr, error) {
+type ParserError struct {
+    token Token
+}
+
+func (parserError ParserError) Error() string {
+    return parserError.token.String()
+}
+
+func Parse(tokens []Token) Expr {
 	current := 0
 
 	peek := func() Token {
@@ -44,18 +52,29 @@ func Parse(tokens []Token) (Expr, error) {
 		return false
 	}
 
+    reportError := func(token Token, message string) {
+        if token.tokenType == EOF {
+            fmt.Printf("[line %d] Error %s: %s\n", token.line, "at end", message)
+        } else {
+            fmt.Printf("[line %d] Error %s: %s\n", token.line, fmt.Sprintf("at '%s'", token.lexeme), message)
+        }
+    }
+
 	consume := func(tokenType TokenType, message string) (Token, error) {
 		if check(tokenType) {
 			return advance(), nil
 		}
 
-		// return peek(), errors.New(message)
-		// should return peek as part of error
-		return peek(), errors.New(message)
+        // TODO: refactor error reporting to its own package/function
+        reportError(peek(), message)
+        return peek(), ParserError{}
 	}
 
 	// TODO: fix recursion
-	unary := func() Expr {
+    var unary func() Expr
+	var primary func() (Expr, error)
+
+	unary = func() Expr {
 		if match(BANG, MINUS) {
 			operator := previous()
 			right := unary()
@@ -120,7 +139,7 @@ func Parse(tokens []Token) (Expr, error) {
 		return equality()
 	}
 
-	primary := func() (Expr, error) {
+	primary = func() (Expr, error) {
 		if match(FALSE) {
 			return Literal{"false"}, nil
 		}
@@ -142,7 +161,10 @@ func Parse(tokens []Token) (Expr, error) {
 		}
 
 		// return token with error
-		return nil, errors.New("Expect expression")
+        reportError(peek(), "Expect expression");
+		return nil, ParserError{}
 	}
-	return nil, nil
+
+    expr := expression()
+    return expr
 }
