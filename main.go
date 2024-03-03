@@ -33,9 +33,7 @@ func runFile(path string) {
 }
 
 func run(source string) {
-    scanner := lox.Scanner { source }
-
-    tokens, err := scanner.Scan()
+    tokens, err := lox.Scan(source)
     if err != nil {
         log.Fatal("Error while scanning")
     }
@@ -43,6 +41,5 @@ func run(source string) {
     for _, token := range tokens {
         fmt.Println(token)
     }
-
 }
 
