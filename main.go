@@ -36,18 +36,17 @@ func runFile(path string) {
 }
 
 func run(source string) {
-    tokens, err := lox.Scan(source)
-    if err != nil {
-        log.Fatal("Error while scanning")
-    }
+    // tokens, err := lox.Scan(source)
+    // if err != nil {
+    //     log.Fatal("Error while scanning")
+    // }
 
     // for _, token := range tokens {
     //     fmt.Println(token)
     // }
 
-    expression := lox.Parse(tokens)
-    fmt.Println(expression)
-
+    // expression := lox.Parse(tokens)
+    // fmt.Println(expression)
 }
 
 func error(line int, where string, message string) {

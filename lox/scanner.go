@@ -50,8 +50,7 @@ func Scan(text string) ([]Token, error) {
         }
 
         if isAtEnd() {
-            log.Fatal("Unterminated string")
-            return
+           return
         }
 
         advance()
@@ -83,6 +82,7 @@ func Scan(text string) ([]Token, error) {
                 advance()
             }
         }
+
 
         number := string(runes[start: current])
         tokens = append(tokens, Token{ NUMBER, number, number, line })
