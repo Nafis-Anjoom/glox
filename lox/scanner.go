@@ -2,12 +2,8 @@ package lox
 
 import "log"
 
-type Scanner struct {
-    Text string
-}
-
-func (s *Scanner) Scan() ([]Token, error) {
-    runes := []rune(s.Text)
+func Scan(text string) ([]Token, error) {
+    runes := []rune(text)
 
     start := 0
     current := 0
@@ -54,8 +50,7 @@ func (s *Scanner) Scan() ([]Token, error) {
         }
 
         if isAtEnd() {
-            log.Fatal("Unterminated string")
-            return
+           return
         }
 
         advance()
@@ -87,6 +82,7 @@ func (s *Scanner) Scan() ([]Token, error) {
                 advance()
             }
         }
+
 
         number := string(runes[start: current])
         tokens = append(tokens, Token{ NUMBER, number, number, line })
