@@ -26,7 +26,7 @@ type Binary struct{
 	right Expr
 }
 
-func (b *Binary) Print() string {
+func (b Binary) Print() string {
     return parenthesize(b.operator.lexeme, b.left, b.right)
 }
 
@@ -35,7 +35,7 @@ type Grouping struct{
 	expression Expr
 }
 
-func (g *Grouping) Print() string {
+func (g Grouping) Print() string {
     return parenthesize("group", g.expression)
 }
 
@@ -43,7 +43,7 @@ type Literal struct{
 	value string
 }
 
-func (l *Literal) Print() string {
+func (l Literal) Print() string {
     if l.value == "" {
         return "nil"
     }
@@ -55,7 +55,7 @@ type Unary struct{
 	right Expr
 }
 
-func (u *Unary) Print() string {
+func (u Unary) Print() string {
     return parenthesize(u.operator.lexeme, u.right)
 }
 
