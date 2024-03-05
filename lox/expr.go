@@ -30,7 +30,6 @@ func (b Binary) Print() string {
     return parenthesize(b.operator.lexeme, b.left, b.right)
 }
 
-
 type Grouping struct{
 	expression Expr
 }
@@ -41,6 +40,7 @@ func (g Grouping) Print() string {
 
 type Literal struct {
 	value string
+    literalType TokenType
 }
 
 func (l Literal) Print() string {
@@ -48,6 +48,10 @@ func (l Literal) Print() string {
         return "nil"
     }
     return l.value
+}
+
+func (l Literal) String() string {
+    return l.Print()
 }
 
 type Unary struct {
@@ -58,4 +62,3 @@ type Unary struct {
 func (u Unary) Print() string {
     return parenthesize(u.operator.lexeme, u.right)
 }
-
