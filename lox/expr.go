@@ -1,6 +1,9 @@
 package lox
 
-import "strings"
+import (
+    "strings"
+    "fmt"
+)
 
 type Expr interface {
     Print() string
@@ -39,15 +42,14 @@ func (g Grouping) Print() string {
 }
 
 type Literal struct {
-	value string
-    literalType TokenType
+	value any
 }
 
 func (l Literal) Print() string {
     if l.value == "" {
         return "nil"
     }
-    return l.value
+    return fmt.Sprint(l.value)
 }
 
 func (l Literal) String() string {

@@ -2,15 +2,15 @@ package lox
 
 import (
 	"fmt"
-    "log"
+	"log"
 )
 
 type ParserError struct {
-    token Token
+	token Token
 }
 
 func (parserError ParserError) Error() string {
-    return parserError.token.String()
+	return parserError.token.String()
 }
 
 func Parse(tokens []Token) (Expr, error) {
@@ -52,26 +52,26 @@ func Parse(tokens []Token) (Expr, error) {
 		return false
 	}
 
-    reportError := func(token Token, message string) {
-        if token.tokenType == EOF {
-            log.Printf("[line %d] Error %s: %s\n", token.line, "at end", message)
-        } else {
-            log.Printf("[line %d] Error %s: %s\n", token.line, fmt.Sprintf("at '%s'", token.lexeme), message)
-        }
-    }
+	reportError := func(token Token, message string) {
+		if token.tokenType == EOF {
+			log.Printf("[line %d] Error %s: %s\n", token.line, "at end", message)
+		} else {
+			log.Printf("[line %d] Error %s: %s\n", token.line, fmt.Sprintf("at '%s'", token.lexeme), message)
+		}
+	}
 
 	consume := func(tokenType TokenType, message string) (Token, error) {
 		if check(tokenType) {
 			return advance(), nil
 		}
 
-        // TODO: refactor error reporting to its own package/function
-        reportError(peek(), message)
-        return peek(), ParserError{}
+		// TODO: refactor error reporting to its own package/function
+		reportError(peek(), message)
+		return peek(), ParserError{}
 	}
 
 	// TODO: fix recursion
-    var unary func() (Expr, error)
+	var unary func() (Expr, error)
 	var primary func() (Expr, error)
 
 	unary = func() (Expr, error) {
@@ -79,17 +79,17 @@ func Parse(tokens []Token) (Expr, error) {
 			operator := previous()
 			right, err := unary()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			return Unary{operator, right}, nil
 		}
 
 		expr, err := primary()
-        if err != nil {
-            return nil, ParserError{}
-        }
+		if err != nil {
+			return nil, ParserError{}
+		}
 
 		return expr, nil
 	}
@@ -97,17 +97,17 @@ func Parse(tokens []Token) (Expr, error) {
 	factor := func() (Expr, error) {
 		expr, err := unary()
 
-        if err != nil {
-            return nil, ParserError{}
-        }
+		if err != nil {
+			return nil, ParserError{}
+		}
 
 		for match(SLASH, STAR) {
 			operator := previous()
 			right, err := unary()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			expr = Binary{expr, operator, right}
 		}
@@ -118,17 +118,17 @@ func Parse(tokens []Token) (Expr, error) {
 	term := func() (Expr, error) {
 		expr, err := factor()
 
-        if err != nil {
-            return nil, ParserError{}
-        }
+		if err != nil {
+			return nil, ParserError{}
+		}
 
 		for match(MINUS, PLUS) {
 			operator := previous()
 			right, err := factor()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			expr = Binary{expr, operator, right}
 		}
@@ -139,17 +139,17 @@ func Parse(tokens []Token) (Expr, error) {
 	comparison := func() (Expr, error) {
 		expr, err := term()
 
-        if err != nil {
-            return nil, ParserError{}
-        }
+		if err != nil {
+			return nil, ParserError{}
+		}
 
 		for match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL) {
 			operator := previous()
 			right, err := term()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			expr = Binary{expr, operator, right}
 		}
@@ -159,17 +159,17 @@ func Parse(tokens []Token) (Expr, error) {
 	equality := func() (Expr, error) {
 		expr, err := comparison()
 
-        if err != nil {
-            return nil, ParserError{}
-        }
+		if err != nil {
+			return nil, ParserError{}
+		}
 
 		for match(BANG_EQUAL, EQUAL_EQUAL) {
 			operator := previous()
 			right, err := comparison()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			expr = Binary{expr, operator, right}
 		}
@@ -183,44 +183,44 @@ func Parse(tokens []Token) (Expr, error) {
 
 	primary = func() (Expr, error) {
 		if match(FALSE) {
-			return Literal{"false", FALSE}, nil
+			return Literal{false}, nil
 		}
 		if match(TRUE) {
-			return Literal{"true", TRUE}, nil
+			return Literal{true}, nil
 		}
 		if match(NIL) {
-			return Literal{"", NIL}, nil
+			return Literal{nil}, nil
 		}
 
 		if match(NUMBER) {
-			return Literal{previous().literal, NUMBER}, nil
+			return Literal{previous().literal}, nil
 		}
 
 		if match(STRING) {
-			return Literal{previous().literal, STRING}, nil
+			return Literal{previous().literal}, nil
 		}
 
 		if match(LEFT_PAREN) {
 			expr, err := expression()
 
-            if err != nil {
-                return nil, ParserError{}
-            }
+			if err != nil {
+				return nil, ParserError{}
+			}
 
 			consume(RIGHT_PAREN, "Expect ')' after expression")
 			return Grouping{expr}, nil
 		}
 
 		// return token with error
-        reportError(peek(), "Expect expression");
+		reportError(peek(), "Expect expression")
 		return nil, ParserError{}
 	}
 
-    expr, err := expression()
-    
-    if err != nil {
-        return nil, ParserError{}
-    }
+	expr, err := expression()
 
-    return expr, nil
+	if err != nil {
+		return nil, ParserError{}
+	}
+
+	return expr, nil
 }

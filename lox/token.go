@@ -129,7 +129,7 @@ var keywords = map[string]TokenType{
 type Token struct {
     tokenType TokenType
     lexeme string
-    literal string
+    literal any
     line int
 }
 

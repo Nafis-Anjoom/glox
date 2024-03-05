@@ -1,6 +1,9 @@
 package lox
 
-import "log"
+import (
+	"log"
+	"strconv"
+)
 
 func Scan(text string) ([]Token, error) {
     runes := []rune(text)
@@ -83,9 +86,12 @@ func Scan(text string) ([]Token, error) {
             }
         }
 
-
-        number := string(runes[start: current])
-        tokens = append(tokens, Token{ NUMBER, number, number, line })
+        numberString := string(runes[start: current])
+        number, err := strconv.ParseFloat(numberString, 64)
+        if err != nil {
+            log.Fatalln("Error scanning number")
+        }
+        tokens = append(tokens, Token{ NUMBER, numberString, number, line })
     }
 
     isAlpha := func(c rune) bool {
