@@ -2,7 +2,7 @@ package lox
 
 import (
 	"fmt"
-	"log"
+    "log"
 )
 
 type ParserError struct {
@@ -54,9 +54,9 @@ func Parse(tokens []Token) (Expr, error) {
 
     reportError := func(token Token, message string) {
         if token.tokenType == EOF {
-            fmt.Printf("[line %d] Error %s: %s\n", token.line, "at end", message)
+            log.Printf("[line %d] Error %s: %s\n", token.line, "at end", message)
         } else {
-            fmt.Printf("[line %d] Error %s: %s\n", token.line, fmt.Sprintf("at '%s'", token.lexeme), message)
+            log.Printf("[line %d] Error %s: %s\n", token.line, fmt.Sprintf("at '%s'", token.lexeme), message)
         }
     }
 
@@ -207,7 +207,7 @@ func Parse(tokens []Token) (Expr, error) {
                 return nil, ParserError{}
             }
 
-			consume(RIGHT_PAREN, "Expect ')' after expression.")
+			consume(RIGHT_PAREN, "Expect ')' after expression")
 			return Grouping{expr}, nil
 		}
 
