@@ -5,13 +5,10 @@ import (
 	"fmt"
 )
 
-func Interpret(expr Expr) error {
+func Interpret(expr Expr) (any, error) {
     value, err := evaluate(expr)
     fmt.Println(value)
-    if err != nil {
-        return err
-    }
-    return nil
+    return value, err
 }
 
 func evaluate(expr Expr) (any, error) {
@@ -41,7 +38,7 @@ func evaluateBinary(binary Binary) (any, error) {
     if err != nil {
         return nil, errors.New("error evaluating the lhs of binary expression")
     }
-    right, err := evaluate(binary.left)
+    right, err := evaluate(binary.right)
     if err != nil {
         return nil, errors.New("error evaluating the rhs of binary expression")
     }
