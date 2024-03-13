@@ -23,6 +23,62 @@ func TestParseValid(t *testing.T) {
 			},
 		},
 		{
+            name: "left-associative operations: one plus one minus two",
+			input: []Token{
+				{tokenType: NUMBER, lexeme: "1", literal: 1.0, line: 1},
+				{tokenType: PLUS, lexeme: "+", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "1.1234", literal: 1.1234, line: 1},
+				{tokenType: MINUS, lexeme: "-", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "2", literal: 2.0, line: 1},
+				{tokenType: EOF, lexeme: "", literal: "", line: 1},
+			},
+			expected: Binary{
+				left:     Binary{
+                    left: Literal{1.0},
+                    operator: Token{tokenType: PLUS, lexeme: "+", literal: "", line: 1},
+                    right: Literal{1.1234},
+                },
+				operator: Token{tokenType: MINUS, lexeme: "-", literal: "", line: 1},
+				right:     Literal{value: 2.0},
+			},
+		},
+		{
+            name: "complex arithmatic: (1.1 + 2 - 10) * 1.10000001 / 2.24354352",
+			input: []Token{
+				{tokenType: LEFT_PAREN, lexeme: "(", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "1.1", literal: 1.1, line: 1},
+				{tokenType: PLUS, lexeme: "+", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "2", literal: 2, line: 1},
+				{tokenType: MINUS, lexeme: "-", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "10", literal: 10, line: 1},
+				{tokenType: RIGHT_PAREN, lexeme: ")", literal: "", line: 1},
+				{tokenType: STAR, lexeme: "*", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "1.10000001", literal: 1.10000001, line: 1},
+				{tokenType: SLASH, lexeme: "/", literal: "", line: 1},
+				{tokenType: NUMBER, lexeme: "2.24354352", literal: 2.24354352, line: 1},
+				{tokenType: EOF, lexeme: "", literal: "", line: 1},
+			},
+			expected: Binary{
+                left: Binary{
+                    left: Grouping{
+                        expression: Binary{
+                            left: Binary{
+                                left: Literal{1.1},
+                                operator: Token{PLUS, "+", "", 1},
+                                right: Literal{2},
+                            },
+                            operator: Token{MINUS, "-", "", 1},
+                            right: Literal{10},
+                        },
+                    },
+                    operator: Token{STAR, "*", "", 1},
+                    right: Literal{1.10000001},
+                },
+                operator: Token{SLASH, "/", "", 1},
+                right: Literal{2.24354352} ,
+            },
+		},
+		{
 			name: "negated decimal multiply grouped expression: -123 * (1 + 1)",
 			input: []Token{
 				{tokenType: MINUS, lexeme: "-", literal: "", line: 1},
@@ -95,7 +151,7 @@ func TestParseValid(t *testing.T) {
 			}
 
 			if expression != test.expected {
-				t.Errorf("result was incorrect.\nresult  :%+v\nexpected: %+v\n", expression, test.expected)
+				t.Errorf("result was incorrect.\nresult  :%+v\nexpected:%+v\n", expression, test.expected)
 			}
 		})
 	}
