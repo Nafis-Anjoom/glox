@@ -2,12 +2,10 @@ package lox
 
 import (
 	"errors"
-	"fmt"
 )
 
 func Interpret(expr Expr) (any, error) {
     value, err := evaluate(expr)
-    fmt.Println(value)
     return value, err
 }
 
@@ -30,6 +28,7 @@ func evaluate(expr Expr) (any, error) {
 }
 
 // If both lhs and rhs are numbers, then all operations are valid
+// If sum of two numbers exceed 1.7976931348623157e+308 or recedes -1.7976931348623157e+308, return +inf or -inf
 // If both lhs and rhs are strings, then only plus operation is valid
 // otherwise, "return not a number"
 // TODO: require heavy testing
