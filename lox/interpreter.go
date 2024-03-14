@@ -2,6 +2,7 @@ package lox
 
 import (
 	"errors"
+	"fmt"
 )
 
 func Interpret(expr Expr) (any, error) {
@@ -75,14 +76,10 @@ func evaluateBinary(binary Binary) (any, error) {
             case EQUAL_EQUAL:
                 return isTruthy(left) == isTruthy(right), nil
             case PLUS:
-                leftString, isLhsString := left.(string)
-                rightString, isRhsString := right.(string)
-
-                if isLhsString && isRhsString {
-                    return leftString + rightString, nil
-                }
+                return fmt.Sprintf("%v%v", left, right), nil
         }
     }
+    fmt.Println("invalid")
     return nil, errors.New("not a number")
 }
 

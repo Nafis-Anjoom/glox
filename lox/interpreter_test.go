@@ -182,8 +182,113 @@ func TestInterpreterArithmetic(t *testing.T) {
 
             resultNumber, _ := result.(float64)
 
-            if result != test.expected {
+            if resultNumber != test.expected {
                 t.Errorf("Incorrect result.\nresult  :%.25f\nexpected:%.25f\n", resultNumber, test.expected)
+            }
+        })
+    }
+}
+
+func TestStringConcat(t *testing.T) {
+    tests := []struct {
+        name string
+        input Expr
+        expected any
+    } {
+        {
+            name: `"hello" + ", world!"`,
+            input: Binary{
+                left: Literal{"hello"},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{", world!"},
+            },
+            expected: "hello, world!",
+        },
+        {
+            name: `"" + ", world!"`,
+            input: Binary{
+                left: Literal{""},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{", world!"},
+            },
+            expected: ", world!",
+        },
+        {
+            name: `"hello" + ""`,
+            input: Binary{
+                left: Literal{"hello"},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{""},
+            },
+            expected: "hello",
+        },
+        {
+            name: `"" + ""`,
+            input: Binary{
+                left: Literal{""},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{""},
+            },
+            expected: "",
+        },
+        {
+            name: `"" + 1`,
+            input: Binary{
+                left: Literal{""},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{1.0},
+            },
+            expected: "1",
+        },
+        {
+            name: `1 + ""`,
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{""},
+            },
+            expected: "1",
+        }, 
+        {
+            name: `1 + 1 + "1"`,
+            input: Binary{
+                left: Binary{
+                    left: Literal{1.0},
+                    operator: Token{PLUS, "+", "", 1},
+                    right: Literal{1.0},
+                },
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{"1"},
+            },
+            expected: "21",
+        }, 
+        {
+            name: `"1" + 1 + 1`,
+            input: Binary{
+                left: Binary{
+                    left: Literal{"1"},
+                    operator: Token{PLUS, "+", "", 1},
+                    right: Literal{1.0},
+                },
+                operator: Token{PLUS, "+", "", 1},
+                right: Literal{1.0},
+            },
+            expected: "111",
+        }, 
+    }
+
+    for _, test := range tests {
+        t.Run(test.name, func(t *testing.T) {
+            result, err := Interpret(test.input)
+
+            if err != nil {
+                t.Errorf("no error expected\n")
+            }
+
+            resultString, _ := result.(string)
+
+            if resultString != test.expected {
+                t.Errorf("Incorrect result.\nresult:  %v\nexpected:%v\n", resultString, test.expected)
             }
         })
     }
