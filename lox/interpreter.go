@@ -32,6 +32,7 @@ func evaluate(expr Expr) (any, error) {
 // If sum of two numbers exceed 1.7976931348623157e+308 or recedes -1.7976931348623157e+308, return +inf or -inf
 // If both lhs and rhs are strings, then only plus operation is valid
 // otherwise, "return not a number"
+// If division by zero, return inf (follow ecmaScript)
 // TODO: require heavy testing
 func evaluateBinary(binary Binary) (any, error) {
     left, err := evaluate(binary.left)

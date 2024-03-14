@@ -123,6 +123,15 @@ func TestInterpreterArithmetic(t *testing.T) {
             expected: float64(1.10000001) / float64(2.24354352),
         },
         {
+            name: "division by zero: 11.0 / 0",
+            input: Binary {
+                left: Literal{float64(11.0)},
+                operator: Token{SLASH, "/", "", 1},
+                right: Literal{float64(0.0)},
+            },
+            expected: math.Inf(1),
+        },
+        {
             name: "grouped expression: (1.1 + 2 - 10)",
             input: Grouping{
                 expression: Binary{
