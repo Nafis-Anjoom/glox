@@ -293,3 +293,166 @@ func TestStringConcat(t *testing.T) {
         })
     }
 }
+
+func TestLogicOperator(t *testing.T) {
+    tests := []struct {
+        name string
+        input Expr
+        expected any
+    } {
+        {
+            name: "true == false",
+            input: Binary{
+                left: Literal{true},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{false},
+            },
+            expected: false,
+        },
+        {
+            name: "true == true",
+            input: Binary{
+                left: Literal{true},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{true},
+            },
+            expected: true,
+        },
+        {
+            name: "false == false",
+            input: Binary{
+                left: Literal{false},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{false},
+            },
+            expected: true,
+        },
+        {
+            name: "false != false",
+            input: Binary{
+                left: Literal{false},
+                operator: Token{BANG_EQUAL, "!=", "", 1},
+                right: Literal{false},
+            },
+            expected: false,
+        },
+        {
+            name: "true != false",
+            input: Binary{
+                left: Literal{true},
+                operator: Token{BANG_EQUAL, "!=", "", 1},
+                right: Literal{false},
+            },
+            expected: true,
+        },
+        {
+            name: "!false == true",
+            input: Binary{
+                left: Unary{
+                    operator: Token{BANG, "!", "", 1},
+                    right: Literal{false},
+
+                },
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{true},
+            },
+            expected: true,
+        },
+        {
+            name: "9.5 == 9.5",
+            input: Binary{
+                left: Literal{9.5},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{9.5},
+            },
+            expected: true,
+        },
+        {
+            name: "1 == 2",
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{2.0},
+            },
+            expected: false,
+        },
+        {
+            name: "1 < 2",
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{LESS, "<", "", 1},
+                right: Literal{2.0},
+            },
+            expected: true,
+        },
+        {
+            name: "1 > 2",
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{GREATER, ">", "", 1},
+                right: Literal{2.0},
+            },
+            expected: false,
+        },
+        {
+            name: "1 <= 2",
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{LESS_EQUAL, "<=", "", 1},
+                right: Literal{2.0},
+            },
+            expected: true,
+        },
+        {
+            name: "1 >= 2",
+            input: Binary{
+                left: Literal{1.0},
+                operator: Token{GREATER_EQUAL, ">=", "", 1},
+                right: Literal{2.0},
+            },
+            expected: false,
+        },
+        {
+            name: "2 <= 2",
+            input: Binary{
+                left: Literal{2.0},
+                operator: Token{LESS_EQUAL, "<=", "", 1},
+                right: Literal{2.0},
+            },
+            expected: true,
+        },
+        {
+            name: "2 >= 2",
+            input: Binary{
+                left: Literal{2.0},
+                operator: Token{GREATER_EQUAL, ">=", "", 1},
+                right: Literal{2.0},
+            },
+            expected: true,
+        },
+        {
+            name: `"string" == true`,
+            input: Binary{
+                left: Literal{"string"},
+                operator: Token{EQUAL_EQUAL, "==", "", 1},
+                right: Literal{true},
+            },
+            expected: true,
+        },
+
+
+    }
+
+    for _, test := range tests {
+        t.Run(test.name, func(t *testing.T) {
+            result, err := Interpret(test.input)
+            if err != nil {
+                t.Errorf("no error expected\n")
+            }
+
+            if result != test.expected {
+                t.Errorf("Incorrect result.\nresult  :%v\nexpected:%v\n", result, test.expected)
+            }
+        })
+    }
+}
